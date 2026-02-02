@@ -21,7 +21,7 @@ void ConfigMgr::resetToFactory() {
   system.weatherEnabled = false;
   system.openWeatherMapApiKey = "";
   system.city = "Rome,IT";
-  system.alarmTimeout = 5; // Default 5 mins
+  system.alarmTimeout = 60; // Default 60 seconds
 
   display.brightness = 5;
   display.dimmingStartHour = 22;

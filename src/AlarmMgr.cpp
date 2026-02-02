@@ -27,11 +27,11 @@ void AlarmMgr::loop() {
 
   // Handle Ringing Audio
   if (_isRinging) {
-    // Auto-stop after configured timeout (minutes -> millis)
+    // Auto-stop after configured timeout (seconds -> millis)
     unsigned long timeout =
-        (unsigned long)ConfigMgr::getInstance().system.alarmTimeout * 60000UL;
+        (unsigned long)ConfigMgr::getInstance().system.alarmTimeout * 1000UL;
     if (timeout == 0)
-      timeout = 300000; // Safety fallback 5 mins
+      timeout = 60000; // Safety fallback 60 seconds
 
     unsigned long elapsed = millis() - _ringStartTime;
 

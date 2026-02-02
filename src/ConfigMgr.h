@@ -19,7 +19,7 @@ struct SystemConfig {
   bool weatherEnabled;
   String openWeatherMapApiKey;
   String city;
-  int alarmTimeout; // Minutes
+  int alarmTimeout; // Seconds
 };
 
 struct DisplayConfig {
