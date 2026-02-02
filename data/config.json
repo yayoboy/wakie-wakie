@@ -1,0 +1,33 @@
+{
+  "wifi": {
+    "ssid": "",
+    "password": "",
+    "hostname": "wakie-clock",
+    "ap_mode": true
+  },
+  "system": {
+    "tz_offset": 3600,
+    "ntp_server": "pool.ntp.org",
+    "weather_en": false,
+    "weather_key": "",
+    "city": "Roma,IT",
+    "alm_timeout": 30
+  },
+  "display": {
+    "brightness": 5,
+    "dim_start": 22,
+    "dim_end": 7,
+    "dim_val": 1,
+    "show_sec": false,
+    "flip": false,
+    "speed": 40
+  },
+  "alarms": [
+    {
+      "en": false,
+      "h": 7,
+      "m": 0,
+      "d": 62
+    }
+  ]
+}

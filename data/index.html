@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wakie-Wakie</title>
+    <style>
+        :root {
+            --primary: #ff4757;
+            --primary-hover: #ff6b7a;
+            --success: #2ed573;
+            --warning: #ffa502;
+            --error: #ff4757;
+            --bg: #1a1a2e;
+            --card: #16213e;
+            --card-border: #0f3460;
+            --text: #ffffff;
+            --text-muted: #a0a0a0;
+            --input-bg: #0f3460;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, sans-serif;
+            background: linear-gradient(135deg, var(--bg) 0%, #16213e 100%);
+            color: var(--text);
+            padding: 20px;
+            max-width: 550px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--primary);
+            margin: 0;
+            font-size: 2em;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+
+        .status-bar {
+            text-align: center;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .status-loading {
+            background: rgba(255, 165, 2, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        .status-ok {
+            background: rgba(46, 213, 115, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .status-error {
+            background: rgba(255, 71, 87, 0.2);
+            color: var(--error);
+            border: 1px solid var(--error);
+        }
+
+        .card {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            border: 1px solid var(--card-border);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 1.2em;
+            color: var(--text);
+        }
+
+        .card-icon {
+            font-size: 1.4em;
+        }
+
+        .card-desc {
+            color: var(--text-muted);
+            font-size: 0.85em;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--card-border);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 0.9em;
+            color: var(--text);
+        }
+
+        .label-hint {
+            font-weight: normal;
+            color: var(--text-muted);
+            font-size: 0.8em;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--card-border);
+            background: var(--input-bg);
+            color: var(--text);
+            font-size: 1em;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 71, 87, 0.2);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: var(--input-bg);
+            appearance: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--primary);
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .slider-value {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .slider-row {
+            display: flex;
+            align-items: center;
+        }
+
+        .slider-row input[type="range"] {
+            flex: 1;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        button:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 71, 87, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .col {
+            flex: 1;
+        }
+
+        /* Checkbox personalizzato */
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            background: var(--input-bg);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .checkbox-item:hover {
+            background: rgba(15, 52, 96, 0.8);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .checkbox-item span {
+            font-size: 0.95em;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        /* Switch toggle per sveglie */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 52px;
+            height: 28px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #444;
+            transition: .3s;
+            border-radius: 28px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: var(--success);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(24px);
+        }
+
+        /* Sezione sveglie */
+        .alarm-item {
+            background: rgba(0, 0, 0, 0.25);
+            padding: 18px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 1px solid var(--card-border);
+        }
+
+        .alarm-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .alarm-time {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .alarm-time input {
+            font-size: 1.6em;
+            width: 65px;
+            text-align: center;
+            background: var(--input-bg);
+            color: white;
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            padding: 8px;
+        }
+
+        .alarm-time span {
+            font-size: 1.6em;
+            color: var(--text-muted);
+        }
+
+        .day-selector {
+            display: flex;
+            gap: 6px;
+            justify-content: space-between;
+        }
+
+        .day-selector label {
+            margin: 0;
+        }
+
+        .day-checkbox {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .day-label {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--input-bg);
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.8em;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .day-label:hover {
+            border-color: var(--primary);
+        }
+
+        .day-checkbox:checked+.day-label {
+            background: var(--primary);
+            font-weight: bold;
+        }
+
+        .btn-delete {
+            background: transparent;
+            border: 2px solid #e84118;
+            color: #e84118;
+            width: auto;
+            padding: 8px 14px;
+            font-size: 0.85em;
+        }
+
+        .btn-delete:hover {
+            background: #e84118;
+            color: white;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-add {
+            background: transparent;
+            border: 2px dashed var(--success);
+            color: var(--success);
+            margin-top: 10px;
+        }
+
+        .btn-add:hover {
+            background: var(--success);
+            color: white;
+            border-style: solid;
+        }
+
+        /* Sottosezioni */
+        .subsection {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--card-border);
+        }
+
+        .subsection-title {
+            font-size: 0.95em;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-muted);
+            font-size: 0.8em;
+        }
+
+        /* Responsive */
+        @media (max-width: 400px) {
+            body {
+                padding: 15px;
+            }
+
+            .checkbox-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .day-label {
+                width: 34px;
+                height: 34px;
+                font-size: 0.75em;
+            }
+
+            .alarm-time input {
+                width: 55px;
+                font-size: 1.3em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Wakie-Wakie</h1>
+        <p class="subtitle">Sveglia intelligente ESP32</p>
+    </header>
+
+    <div class="status-bar status-loading" id="status">Caricamento...</div>
+
+    <!-- WiFi -->
+    <div class="card">
+        <div class="card-header">
+            <span class="card-icon">📶</span>
+            <h2>Connessione WiFi</h2>
+        </div>
+        <p class="card-desc">Configura la connessione alla rete wireless</p>
+
+        <div class="form-group">
+            <label>Nome rete WiFi</label>
+            <input type="text" id="ssid" placeholder="Es: Casa_WiFi">
+        </div>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="password" placeholder="Password della rete">
+        </div>
+        <div class="form-group">
+            <label>Nome dispositivo <span class="label-hint">(per accesso via browser)</span></label>
+            <input type="text" id="hostname" placeholder="Es: wakie">
+        </div>
+    </div>
+
+    <!-- Sveglie -->
+    <div class="card">
+        <div class="card-header">
+            <span class="card-icon">⏰</span>
+            <h2>Sveglie</h2>
+        </div>
+        <p class="card-desc">Gestisci le tue sveglie giornaliere</p>
+
+        <div id="alarmList"></div>
+        <button type="button" class="btn-add" onclick="addAlarm()">+ Aggiungi sveglia</button>
+
+        <div class="subsection">
+            <div class="subsection-title">⏱️ Impostazioni sveglia</div>
+            <div class="form-group">
+                <label>Spegnimento automatico <span class="label-hint">(secondi)</span></label>
+                <input type="number" id="alm_timeout" min="1" max="300" placeholder="30">
+            </div>
+        </div>
+    </div>
+
+    <!-- Display -->
+    <div class="card">
+        <div class="card-header">
+            <span class="card-icon">💡</span>
+            <h2>Schermo</h2>
+        </div>
+        <p class="card-desc">Impostazioni del display LED</p>
+
+        <div class="form-group">
+            <label>Luminosità</label>
+            <div class="slider-row">
+                <input type="range" id="brightness" min="0" max="15"
+                    oninput="document.getElementById('brightnessVal').textContent = this.value">
+                <span class="slider-value" id="brightnessVal">8</span>
+            </div>
+        </div>
+
+        <div class="checkbox-grid">
+            <label class="checkbox-item">
+                <input type="checkbox" id="flip">
+                <span>Ruota schermo 180°</span>
+            </label>
+            <label class="checkbox-item">
+                <input type="checkbox" id="show_sec">
+                <span>Mostra secondi</span>
+            </label>
+        </div>
+
+        <div class="subsection">
+            <div class="subsection-title">🌙 Attenuazione notturna</div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label>Ora inizio</label>
+                        <input type="number" id="dim_start" min="0" max="23" placeholder="22">
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-group">
+                        <label>Ora fine</label>
+                        <input type="number" id="dim_end" min="0" max="23" placeholder="7">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Luminosità ridotta <span class="label-hint">(0-15)</span></label>
+                <input type="number" id="dim_val" min="0" max="15" placeholder="2">
+            </div>
+        </div>
+    </div>
+
+    <!-- Sistema -->
+    <div class="card">
+        <div class="card-header">
+            <span class="card-icon">⚙️</span>
+            <h2>Sistema</h2>
+        </div>
+        <p class="card-desc">Configurazione avanzata</p>
+
+        <div class="form-group">
+            <label>Fuso orario <span class="label-hint">(ore da UTC, Italia: +1 inverno, +2 estate)</span></label>
+            <input type="number" id="tz_offset" placeholder="1">
+        </div>
+
+        <div class="subsection">
+            <div class="subsection-title">🌤️ Meteo (opzionale)</div>
+            <label class="checkbox-item" style="margin-bottom: 15px;">
+                <input type="checkbox" id="weather_en">
+                <span>Abilita meteo</span>
+            </label>
+            <div class="form-group">
+                <label>Chiave API <span class="label-hint">(OpenWeatherMap)</span></label>
+                <input type="text" id="weather_key" placeholder="La tua API key">
+            </div>
+            <div class="form-group">
+                <label>Città</label>
+                <input type="text" id="city" placeholder="Es: Roma">
+            </div>
+        </div>
+    </div>
+
+    <button type="button" onclick="saveConfig()">
+        💾 SALVA IMPOSTAZIONI
+    </button>
+
+    <footer>
+        Wakie-Wakie &bull; ESP32 Smart Clock
+    </footer>
+
+    <script>
+        let alarms = [];
+        const days = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'];
+
+        function setStatus(text, type) {
+            const el = document.getElementById('status');
+            el.textContent = text;
+            el.className = 'status-bar status-' + type;
+        }
+
+        async function loadConfig() {
+            try {
+                const res = await fetch('/api/config');
+                const data = await res.json();
+
+                // WiFi
+                setVal('ssid', data.wifi.ssid);
+                setVal('password', data.wifi.password);
+                setVal('hostname', data.wifi.hostname);
+
+                // Sistema
+                // Converti secondi in ore per il fuso orario
+                setVal('tz_offset', Math.round((data.system.tz_offset || 0) / 3600));
+                setVal('weather_key', data.system.weather_key);
+                setVal('city', data.system.city);
+                setCheck('weather_en', data.system.weather_en);
+                setVal('alm_timeout', data.system.alm_timeout || 5);
+
+                // Display
+                setVal('brightness', data.display.brightness);
+                document.getElementById('brightnessVal').textContent = data.display.brightness;
+                setCheck('flip', data.display.flip);
+                setCheck('show_sec', data.display.show_sec);
+                setVal('dim_start', data.display.dim_start);
+                setVal('dim_end', data.display.dim_end);
+                setVal('dim_val', data.display.dim_val);
+
+                // Sveglie
+                alarms = data.alarms || [];
+                renderAlarms();
+
+                setStatus('Configurazione caricata', 'ok');
+            } catch (e) {
+                console.error(e);
+                setStatus('Errore di caricamento', 'error');
+            }
+        }
+
+        function renderAlarms() {
+            const container = document.getElementById('alarmList');
+            container.innerHTML = '';
+
+            if (alarms.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:var(--text-muted); padding:20px;">Nessuna sveglia configurata</p>';
+                return;
+            }
+
+            alarms.forEach((alm, idx) => {
+                const el = document.createElement('div');
+                el.className = 'alarm-item';
+
+                let daysHtml = '<div class="day-selector">';
+                days.forEach((d, dIdx) => {
+                    const checked = (alm.d >> dIdx) & 1 ? 'checked' : '';
+                    daysHtml += `<label>
+                        <input type="checkbox" class="day-checkbox" onchange="updateAlarmDay(${idx}, ${dIdx}, this.checked)" ${checked}>
+                        <div class="day-label">${d}</div>
+                    </label>`;
+                });
+                daysHtml += '</div>';
+
+                el.innerHTML = `
+                    <div class="alarm-header">
+                        <label class="switch">
+                            <input type="checkbox" ${alm.en ? 'checked' : ''} onchange="updateAlarm(${idx}, 'en', this.checked)">
+                            <span class="slider"></span>
+                        </label>
+                        <div class="alarm-time">
+                            <input type="number" value="${String(alm.h).padStart(2, '0')}" min="0" max="23" onchange="updateAlarm(${idx}, 'h', this.value)">
+                            <span>:</span>
+                            <input type="number" value="${String(alm.m).padStart(2, '0')}" min="0" max="59" onchange="updateAlarm(${idx}, 'm', this.value)">
+                        </div>
+                        <button class="btn-delete" onclick="removeAlarm(${idx})">Elimina</button>
+                    </div>
+                    ${daysHtml}
+                `;
+                container.appendChild(el);
+            });
+        }
+
+        function updateAlarm(idx, field, val) {
+            alarms[idx][field] = (field === 'en') ? val : parseInt(val);
+        }
+
+        function updateAlarmDay(idx, dayIdx, checked) {
+            if (checked) {
+                alarms[idx].d |= (1 << dayIdx);
+            } else {
+                alarms[idx].d &= ~(1 << dayIdx);
+            }
+        }
+
+        function addAlarm() {
+            alarms.push({ en: true, h: 7, m: 0, d: 62 }); // Default Lun-Ven
+            renderAlarms();
+        }
+
+        function removeAlarm(idx) {
+            alarms.splice(idx, 1);
+            renderAlarms();
+        }
+
+        function setVal(id, val) {
+            const el = document.getElementById(id);
+            if (el) el.value = val ?? '';
+        }
+
+        function setCheck(id, val) {
+            const el = document.getElementById(id);
+            if (el) el.checked = val;
+        }
+
+        function getVal(id) {
+            const el = document.getElementById(id);
+            if (!el) return '';
+            return (el.type === 'number' || el.type === 'range') ? parseInt(el.value) || 0 : el.value;
+        }
+
+        function getCheck(id) {
+            const el = document.getElementById(id);
+            return el ? el.checked : false;
+        }
+
+        async function saveConfig() {
+            // Converti ore in secondi per il fuso orario
+            const tzHours = getVal('tz_offset');
+
+            const data = {
+                wifi: {
+                    ssid: getVal('ssid'),
+                    password: getVal('password'),
+                    hostname: getVal('hostname')
+                },
+                alarms: alarms,
+                display: {
+                    brightness: getVal('brightness'),
+                    flip: getCheck('flip'),
+                    show_sec: getCheck('show_sec'),
+                    dim_start: getVal('dim_start'),
+                    dim_end: getVal('dim_end'),
+                    dim_val: getVal('dim_val'),
+                    speed: 40
+                },
+                system: {
+                    tz_offset: tzHours * 3600,
+                    weather_key: getVal('weather_key'),
+                    city: getVal('city'),
+                    weather_en: getCheck('weather_en'),
+                    ntp_server: "pool.ntp.org",
+                    alm_timeout: getVal('alm_timeout')
+                }
+            };
+
+            setStatus('Salvataggio in corso...', 'loading');
+
+            try {
+                await fetch('/api/config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                setStatus('Salvato! Riavvio in corso...', 'ok');
+            } catch (e) {
+                setStatus('Errore durante il salvataggio', 'error');
+            }
+        }
+
+        window.onload = loadConfig;
+    </script>
+</body>
+
+</html>
