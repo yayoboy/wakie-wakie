@@ -36,16 +36,12 @@ public:
 
   void showTime(int hour, int minute, int second, bool showSeconds);
   void showMessage(String msg);
-  void showWeather(float temp, String condition);
-
-  bool isAnimating();
 
 private:
   DisplayMgr();
   // Software SPI esattamente come ESPTimeCast
   MD_Parola P = MD_Parola(HARDWARE_TYPE, DATA_PIN, CLK_PIN, CS_PIN, MAX_DEVICES);
 
-  uint32_t _lastUpdate = 0;
   bool _showingMessage = false;
 };
 
