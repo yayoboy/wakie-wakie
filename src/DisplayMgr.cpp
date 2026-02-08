@@ -15,6 +15,9 @@ void DisplayMgr::begin() {
 
   Serial.println("DisplayMgr: Init complete");
 
+  // Apply configured brightness, flip and scroll speed
+  updateConfig();
+
   // Mostra subito l'ora (00:00 fino alla sincronizzazione NTP)
   P.setTextEffect(0, PA_PRINT, PA_NO_EFFECT);
   P.setTextAlignment(PA_CENTER);
@@ -52,7 +55,10 @@ void DisplayMgr::loop() {
       int end = config.display.dimmingEndHour;
       bool dim = false;
 
-      if (start < end) {
+      if (start == end) {
+        // Same hour: dimming disabled
+        dim = false;
+      } else if (start < end) {
         // e.g. 22 to 23
         if (h >= start && h < end)
           dim = true;

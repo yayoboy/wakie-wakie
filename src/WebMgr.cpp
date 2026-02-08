@@ -60,8 +60,21 @@ void WebMgr::handleConfigGet(AsyncWebServerRequest *request) {
 
 void WebMgr::handleConfigPost(AsyncWebServerRequest *request, uint8_t *data,
                               size_t len, size_t index, size_t total) {
-  StaticJsonDocument<4096> doc;
-  DeserializationError error = deserializeJson(doc, data, len);
+  // Accumulate body chunks into buffer
+  if (index == 0) {
+    _bodyBuffer = "";
+    _bodyBuffer.reserve(total);
+  }
+  _bodyBuffer += String((char *)data, len);
+
+  // Wait until all chunks have been received
+  if (index + len < total) {
+    return;
+  }
+
+  JsonDocument doc;
+  DeserializationError error = deserializeJson(doc, _bodyBuffer);
+  _bodyBuffer = "";
 
   if (error) {
     Serial.print(F("deserializeJson() failed: "));

@@ -61,8 +61,8 @@ bool ConfigMgr::loadConfig() {
     return false;
   }
 
-  // Increased doc size for array
-  StaticJsonDocument<4096> doc;
+  // ArduinoJson v7: use JsonDocument instead of removed StaticJsonDocument
+  JsonDocument doc;
   DeserializationError error = deserializeJson(doc, file);
   file.close();
 
@@ -83,7 +83,7 @@ bool ConfigMgr::loadConfig() {
   system.weatherEnabled = doc["system"]["weather_en"] | false;
   system.openWeatherMapApiKey = doc["system"]["weather_key"] | "";
   system.city = doc["system"]["city"] | "Rome,IT";
-  system.alarmTimeout = doc["system"]["alm_timeout"] | 5;
+  system.alarmTimeout = doc["system"]["alm_timeout"] | 60;
 
   // Load Display
   display.brightness = doc["display"]["brightness"] | 5;
@@ -112,7 +112,7 @@ bool ConfigMgr::loadConfig() {
 }
 
 bool ConfigMgr::saveConfig() {
-  StaticJsonDocument<4096> doc;
+  JsonDocument doc;
 
   doc["wifi"]["ssid"] = wifi.ssid;
   doc["wifi"]["password"] = wifi.password;
@@ -134,9 +134,9 @@ bool ConfigMgr::saveConfig() {
   doc["display"]["flip"] = display.flipDisplay;
   doc["display"]["speed"] = display.scrollSpeed;
 
-  JsonArray arr = doc.createNestedArray("alarms");
+  JsonArray arr = doc["alarms"].to<JsonArray>();
   for (const auto &a : alarms) {
-    JsonObject obj = arr.createNestedObject();
+    JsonObject obj = arr.add<JsonObject>();
     obj["en"] = a.enabled;
     obj["h"] = a.hour;
     obj["m"] = a.minute;
